@@ -1,0 +1,22 @@
+version: '3'
+services:
+  shop_app:
+    container_name: shop_app
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/application
+    ports:
+      - "5000:8080"
+    depends_on:
+      - shop_db
+  shop_db:
+    container_name: shop_db
+    image: "mysql:8"
+    expose:
+      - "3306"
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
