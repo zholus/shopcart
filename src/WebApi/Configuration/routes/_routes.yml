@@ -1,0 +1,7 @@
+cart_routes:
+  resource: 'cart.yml'
+  prefix: /
+
+product_routes:
+  resource: 'product.yml'
+  prefix: /

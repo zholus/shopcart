@@ -1,0 +1,19 @@
+create_product:
+  path: /products
+  controller: App\WebApi\Action\Product\CreateProductAction
+  methods: [POST]
+
+show_products_list:
+  path: /products
+  controller: App\WebApi\Action\Product\ShowProductListAction
+  methods: [GET]
+
+delete_product:
+  path: /products/{product_id}
+  controller: App\WebApi\Action\Product\DeleteProductAction
+  methods: [DELETE]
+
+update_product:
+  path: /products/{product_id}
+  controller: App\WebApi\Action\Product\UpdateProductAction
+  methods: [PUT]

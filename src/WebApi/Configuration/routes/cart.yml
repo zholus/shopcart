@@ -1,0 +1,19 @@
+creat_cart:
+  path: /carts
+  controller: App\WebApi\Action\Cart\CreateCartAction
+  methods: [POST]
+
+show_cart_products_list:
+  path: /carts/{cart_id}/products
+  controller: App\WebApi\Action\Cart\ShowProductListAction
+  methods: [GET]
+
+add_product_to_cart:
+  path: /carts/{cart_id}/products
+  controller: App\WebApi\Action\Cart\AddProductAction
+  methods: [POST]
+
+remove_product_from_cart:
+  path: /carts/{cart_id}/products/{product_id}
+  controller: App\WebApi\Action\Cart\RemoveProductAction
+  methods: [DELETE]
