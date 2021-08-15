@@ -1,15 +1,15 @@
-creat_cart:
+create_cart:
   path: /carts
   controller: App\WebApi\Action\Cart\CreateCartAction
   methods: [POST]
 
-show_cart_products_list:
-  path: /carts/{cart_id}/products
+show_cart_details:
+  path: /carts/{cart_id}
   controller: App\WebApi\Action\Cart\ShowProductListAction
   methods: [GET]
 
 add_product_to_cart:
-  path: /carts/{cart_id}/products
+  path: /carts/{cart_id}/products/{product_id}
   controller: App\WebApi\Action\Cart\AddProductAction
   methods: [POST]
 
