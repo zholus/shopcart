@@ -7,4 +7,5 @@ interface ProductRepository
 {
     public function add(Product $product): void;
     public function findById(ProductId $productId): Product;
+    public function remove(Product $product): void;
 }

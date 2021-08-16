@@ -35,4 +35,9 @@ final class DoctrineProductRepository extends ServiceEntityRepository implements
 
         return $product;
     }
+
+    public function remove(Product $product): void
+    {
+        $this->getEntityManager()->remove($product);
+    }
 }
