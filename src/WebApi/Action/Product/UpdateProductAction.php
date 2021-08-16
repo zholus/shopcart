@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\WebApi\Action\Product;
 
 use App\Catalog\Application\ChangeProduct\ChangeProductCommand;
+use App\Catalog\Application\GetProductDetailsById\GetProductDetailsByIdQuery;
 use App\Common\Application\Command\CommandBus;
 use App\Common\Application\Command\CommandValidationException;
+use App\Common\Application\Query\QueryBus;
 use App\WebApi\Resources\Product\Product;
 use App\WebApi\Resources\Product\ProductPresenter;
 use DomainException;
@@ -16,8 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class UpdateProductAction extends AbstractController
 {
-    public function __construct(private CommandBus $commandBus)
-    {
+    public function __construct(
+        private CommandBus $commandBus,
+        private QueryBus $queryBus
+    ) {
     }
 
     public function __invoke(int $productId, Request $request): Response
@@ -41,7 +45,14 @@ final class UpdateProductAction extends AbstractController
             ], Response::HTTP_CONFLICT);
         }
 
-        $product = new Product(1, 'GTA', 25600);
+        /** @var \App\Catalog\Application\ReadModel\Product $product */
+        $product = $this->queryBus->handle(new GetProductDetailsByIdQuery($productId));
+
+        $product = new Product(
+            $product->getProductId(),
+            $product->getTitle(),
+            $product->getPrice()
+        );
 
         $presenter = new ProductPresenter($product);
 
