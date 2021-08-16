@@ -8,6 +8,7 @@ framework:
         buses:
             command.bus:
                 middleware:
+                    - 'App\Common\Infrastructure\Messenger\Middleware\CommandValidationMiddleware'
                     - doctrine_transaction
 
             query.bus: ~

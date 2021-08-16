@@ -9,11 +9,11 @@ show_products_list:
   methods: [GET]
 
 delete_product:
-  path: /products/{product_id}
+  path: /products/{productId}
   controller: App\WebApi\Action\Product\DeleteProductAction
   methods: [DELETE]
 
 update_product:
-  path: /products/{product_id}
+  path: /products/{productId}
   controller: App\WebApi\Action\Product\UpdateProductAction
   methods: [PUT]
