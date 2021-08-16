@@ -3,24 +3,64 @@ declare(strict_types=1);
 
 namespace App\WebApi\Action\Product;
 
+use App\Catalog\Application\GetProductsPaginated\GetProductsPaginatedQuery;
+use App\Catalog\Application\ReadModel\ProductPaginated;
+use App\Common\Application\Command\CommandValidationException;
+use App\Common\Application\Query\QueryBus;
 use App\WebApi\Resources\Product\Product;
 use App\WebApi\Resources\Product\ProductPresenter;
 use App\WebApi\Resources\Product\ProductsList;
+use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 final class ShowProductListAction extends AbstractController
 {
-    public function __invoke(): JsonResponse
+    public function __construct(private QueryBus $queryBus)
     {
+    }
+
+    public function __invoke(Request $request): JsonResponse
+    {
+        $page = (int)$request->get('page', 1);
+
+        try {
+            /** @var ProductPaginated $productPaginated */
+            $productPaginated = $this->queryBus->handle(new GetProductsPaginatedQuery($page));
+        } catch (CommandValidationException $exception) {
+            return new JsonResponse([
+                'errors' => $exception->getMessages()
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (DomainException $exception) {
+            return new JsonResponse([
+                'error' => $exception->getMessage()
+            ], Response::HTTP_CONFLICT);
+        }
+
+        $products = [];
+
+        foreach ($productPaginated->getProducts() as $product) {
+            $products[] = new Product(
+                $product->getProductId(),
+                $product->getTitle(),
+                $product->getPrice()
+            );
+        }
+
         $list = new ProductsList(
-            new Product(1, 'GTA', 25600),
-            new Product(2, 'Mafia', 11300)
+            ...$products
         );
 
         return new JsonResponse(array_map(
             fn(Product $product) => (new ProductPresenter($product))->present(),
             $list->getProducts()
-        ));
+        ), Response::HTTP_OK, [
+            'x-pagination-total-items' => $productPaginated->getPaginationData()->getTotalItems(),
+            'x-pagination-total-pages' => $productPaginated->getPaginationData()->getTotalPages(),
+            'x-pagination-current-page' => $productPaginated->getPaginationData()->getCurrentPage(),
+            'x-pagination-per-page' => $productPaginated->getPaginationData()->getPerPage(),
+        ]);
     }
 }

@@ -1,0 +1,5 @@
+App\Catalog\Application\GetProductsPaginated\GetProductsPaginatedQuery:
+  properties:
+    page:
+      - Positive:
+          message: 'Page should be positive'
