@@ -6,10 +6,25 @@ namespace App\Cart\Domain;
 class Item
 {
     public function __construct(
-        ItemId $id,
-        string $title,
-        int $count,
-        int $price
+        private ItemId $id,
+        private int $externalId,
+        private string $title,
+        private int $price
     ) {
+    }
+
+    public function getSnapshot(): ItemSnapshot
+    {
+        return new ItemSnapshot(
+            $this->id->getId(),
+            $this->externalId,
+            $this->title,
+            $this->price
+        );
+    }
+
+    public function isExternalItem(int $externalId): bool
+    {
+        return $this->externalId === $externalId;
     }
 }

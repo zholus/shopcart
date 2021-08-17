@@ -1,20 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace App\WebApi\Resources\Cart;
+namespace App\Cart\Application\ReadModel;
 
-class Product
+class Item
 {
     public function __construct(
-        private int $id,
+        private string $id,
+        private int $externalId,
         private string $title,
         private int $price,
     ) {
     }
 
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getExternalId(): int
+    {
+        return $this->externalId;
     }
 
     public function getTitle(): string
@@ -22,7 +28,7 @@ class Product
         return $this->title;
     }
 
-    public function price(): int
+    public function getPrice(): int
     {
         return $this->price;
     }

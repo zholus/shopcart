@@ -20,10 +20,32 @@ class Cart
         return new self($id, []);
     }
 
+    public function addItem(ItemId $itemId, int $externalId, string $title, int $price): void
+    {
+        if (!$this->canAddItem($externalId)) {
+            throw CannotAddMoreItemsToCartException::withExternalId($externalId);
+        }
+
+        $this->items[] = new Item(
+            $itemId,
+            $externalId,
+            $title,
+            $price
+        );
+    }
+
     public function getSnapshot(): CartSnapshot
     {
         return new CartSnapshot(
-            $this->id->getId()
+            $this->id->getId(),
+            array_map(fn(Item $item) => $item->getSnapshot(), $this->items)
         );
+    }
+
+    private function canAddItem(int $externalId): bool
+    {
+        $array = array_filter($this->items, fn(Item $item) => $item->isExternalItem($externalId));
+
+        return count($array) < 3;
     }
 }

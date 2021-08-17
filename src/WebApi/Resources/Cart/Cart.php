@@ -26,7 +26,7 @@ class Cart
         $sum = 0;
 
         foreach ($this->getProductsList()->getProducts() as $product) {
-            $sum = (int)bcadd((string)$product->getTotalPrice(), (string)$sum);
+            $sum = (int)bcadd((string)$product->price(), (string)$sum);
         }
 
         return $sum;

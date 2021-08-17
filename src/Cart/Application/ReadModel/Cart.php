@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Cart\Domain;
+namespace App\Cart\Application\ReadModel;
 
-class CartSnapshot
+class Cart
 {
     /**
-     * @param ItemSnapshot[] $items
+     * @param Item[] $items
      */
     public function __construct(
         private string $id,

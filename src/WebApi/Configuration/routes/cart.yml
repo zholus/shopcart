@@ -4,16 +4,16 @@ create_cart:
   methods: [POST]
 
 show_cart_details:
-  path: /carts/{cart_id}
+  path: /carts/{cartId}
   controller: App\WebApi\Action\Cart\ShowProductListAction
   methods: [GET]
 
 add_product_to_cart:
-  path: /carts/{cart_id}/products/{product_id}
+  path: /carts/{cartId}/products/{productId}
   controller: App\WebApi\Action\Cart\AddProductAction
   methods: [POST]
 
 remove_product_from_cart:
-  path: /carts/{cart_id}/products/{product_id}
+  path: /carts/{cartId}/products/{productId}
   controller: App\WebApi\Action\Cart\RemoveProductAction
   methods: [DELETE]

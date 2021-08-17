@@ -17,9 +17,7 @@ class CartPresenter
             'products' => array_map(fn(Product $product) => [
                 'id' => $product->getId(),
                 'title' => $product->getTitle(),
-                'count' => $product->getCount(),
-                'single_unit_price' => $product->getSingleUnitPrice(),
-                'total_price' => $product->getTotalPrice(),
+                'price' => $product->price(),
             ], $this->cart->getProductsList()->getProducts())
         ];
     }
