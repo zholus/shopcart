@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Cart\Infrastructure\Application\ReadModel;
 
 use App\Cart\Application\ReadModel\Cart;
+use App\Cart\Application\ReadModel\CartNotFoundException;
 use App\Cart\Application\ReadModel\CartReadModel;
 use App\Cart\Application\ReadModel\Item;
 use Doctrine\DBAL\Connection;
@@ -30,7 +31,7 @@ final class DbalCartReadModel implements CartReadModel
         $result = $qb->execute();
 
         if ($result->fetchAssociative() === false) {
-            // todo: throw
+            throw new CartNotFoundException(sprintf('Cart with id [%s] not found', $id));
         }
 
         $qb = $this->connection->createQueryBuilder();

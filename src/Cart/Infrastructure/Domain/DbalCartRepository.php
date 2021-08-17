@@ -5,6 +5,7 @@ namespace App\Cart\Infrastructure\Domain;
 
 use App\Cart\Domain\Cart;
 use App\Cart\Domain\CartId;
+use App\Cart\Domain\CartNotFoundException;
 use App\Cart\Domain\CartRepository;
 use App\Cart\Domain\Item;
 use App\Cart\Domain\ItemId;
@@ -40,10 +41,8 @@ final class DbalCartRepository implements CartRepository
 
         $result = $qb->execute();
 
-        $rowCart = $result->fetchAssociative();
-
-        if ($rowCart === false) {
-            // todo: throw
+        if ($result->fetchAssociative() === false) {
+            throw CartNotFoundException::withId($cartId);
         }
 
         $qb = $this->connection->createQueryBuilder();
@@ -68,7 +67,7 @@ final class DbalCartRepository implements CartRepository
         }
 
         return new Cart(
-            new CartId($rowCart['id']),
+            $cartId,
             $items
         );
     }

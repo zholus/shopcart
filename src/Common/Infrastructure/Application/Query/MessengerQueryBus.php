@@ -5,6 +5,7 @@ namespace App\Common\Infrastructure\Application\Query;
 
 use App\Common\Application\Query\Query;
 use App\Common\Application\Query\QueryBus;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -21,6 +22,14 @@ final class MessengerQueryBus implements QueryBus
 
     public function handle(Query $query): object
     {
-        return $this->handleQuery($query);
+        try {
+            return $this->handleQuery($query);
+        } catch (HandlerFailedException $e) {
+            while ($e instanceof HandlerFailedException) {
+                $e = $e->getPrevious();
+            }
+
+            throw $e;
+        }
     }
 }

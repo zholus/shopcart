@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\WebApi\Middleware;
 
 use App\Common\Application\Command\CommandValidationException;
+use App\Common\Application\NotFoundException;
 use DomainException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,20 +25,35 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
     {
         $exception = $event->getThrowable();
 
-        $response = match ($exception::class) {
-            CommandValidationException::class => new JsonResponse(
-                ['error' => $exception->getMessages()],
+        $response = null;
+
+        if ($exception instanceof CommandValidationException) {
+            $response = new JsonResponse(
+                ['errors' => $exception->getMessages()],
                 Response::HTTP_BAD_REQUEST
-            ),
-            DomainException::class => new JsonResponse(
+            );
+        }
+
+        if ($exception instanceof DomainException) {
+            $response = new JsonResponse(
                 ['error' => $exception->getMessage()],
                 Response::HTTP_CONFLICT
-            ),
-            default => new JsonResponse(
+            );
+        }
+
+        if ($exception instanceof NotFoundException) {
+            $response = new JsonResponse(
+                ['error' => $exception->getMessage()],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        if ($response === null) {
+            $response = new JsonResponse(
                 ['error' => 'Unexpected internal server error'],
                 Response::HTTP_CONFLICT
-            ),
-        };
+            );
+        }
 
         $event->setResponse($response);
     }

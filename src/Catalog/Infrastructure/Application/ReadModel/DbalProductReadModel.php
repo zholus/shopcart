@@ -5,6 +5,7 @@ namespace App\Catalog\Infrastructure\Application\ReadModel;
 
 use App\Catalog\Application\ReadModel\PaginationData;
 use App\Catalog\Application\ReadModel\Product;
+use App\Catalog\Application\ReadModel\ProductNotFoundException;
 use App\Catalog\Application\ReadModel\ProductPaginated;
 use App\Catalog\Application\ReadModel\ProductReadModel;
 use Doctrine\DBAL\Connection;
@@ -68,7 +69,7 @@ final class DbalProductReadModel implements ProductReadModel
         $row = $result->fetchAssociative();
 
         if ($row === false) {
-            // todo: throw
+            throw ProductNotFoundException::byTitle($title);
         }
 
         return $this->fromRow($row);
@@ -87,7 +88,7 @@ final class DbalProductReadModel implements ProductReadModel
         $row = $result->fetchAssociative();
 
         if ($row === false) {
-            // todo: throw
+            throw ProductNotFoundException::byId($productId);
         }
 
         return $this->fromRow($row);
