@@ -6,12 +6,12 @@ namespace App\WebApi\Resources\Cart;
 class Cart
 {
     public function __construct(
-        private int $id,
+        private string $id,
         private ProductsList $productsList
     ) {
     }
 
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
     }

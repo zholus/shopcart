@@ -1,0 +1,4 @@
+App\Cart\Application\CreateCart\CreateCartCommand:
+  properties:
+    id:
+      - Uuid: ~
