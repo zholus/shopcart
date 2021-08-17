@@ -22,7 +22,7 @@ class Product
         return $this->title;
     }
 
-    public function price(): int
+    public function getPrice(): int
     {
         return $this->price;
     }

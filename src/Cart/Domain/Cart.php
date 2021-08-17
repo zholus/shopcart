@@ -48,4 +48,16 @@ class Cart
 
         return count($array) < 3;
     }
+
+    public function remoteItemByExternalId(int $externalId): void
+    {
+        foreach ($this->items as $key => $item) {
+            if ($item->isExternalItem($externalId)) {
+                unset($this->items[$key]);
+                break;
+            }
+        }
+
+        $this->items = array_values($this->items);
+    }
 }
