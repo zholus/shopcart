@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Catalog\Domain;
 
+use App\Common\Domain\Aggregate;
 use Money\Money;
 
-class Product
+class Product extends Aggregate
 {
     public function __construct(
         private ProductId $id,
@@ -31,21 +32,41 @@ class Product
         );
     }
 
-    public function changeTitle(string $title, ProductTitleUniquenessChecker $titleUniquenessChecker): void
+    public function changeTitle(string $newTitle, ProductTitleUniquenessChecker $titleUniquenessChecker): void
     {
-        if ($this->title === $title) {
+        if ($this->title === $newTitle) {
             return;
         }
 
-        if (!$titleUniquenessChecker->isUnique($title)) {
-            throw ProductWithTitleExistsException::create($title);
+        if (!$titleUniquenessChecker->isUnique($newTitle)) {
+            throw ProductWithTitleExistsException::create($newTitle);
         }
 
-        $this->title = $title;
+        $oldTitle = $this->title;
+
+        $this->title = $newTitle;
+
+        $this->publishDomainEvent(new TitleChanged(
+            $this->id,
+            $oldTitle,
+            $newTitle
+        ));
     }
 
-    public function changePrice(Money $price): void
+    public function changePrice(Money $newPrice): void
     {
-        $this->price = clone $price;
+        if ($this->price->equals($newPrice)) {
+            return;
+        }
+
+        $oldPrice = $this->price;
+
+        $this->price = $newPrice;
+
+        $this->publishDomainEvent(new PriceChanged(
+            $this->id,
+            $oldPrice,
+            $newPrice
+        ));
     }
 }

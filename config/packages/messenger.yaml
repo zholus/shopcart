@@ -9,8 +9,17 @@ framework:
             command.bus:
                 middleware:
                     - 'App\Common\Infrastructure\Messenger\Middleware\CommandValidationMiddleware'
+                    - 'App\Common\Infrastructure\Messenger\Middleware\IntegrationEventDispatcherMiddleware'
                     - doctrine_transaction
+                    - 'App\Common\Infrastructure\Messenger\Middleware\DomainEventDispatcherMiddleware'
 
             query.bus:
                 middleware:
                     - 'App\Common\Infrastructure\Messenger\Middleware\CommandValidationMiddleware'
+
+            event.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - 'App\Common\Infrastructure\Messenger\Middleware\CommandValidationMiddleware'
+                    - 'App\Common\Infrastructure\Messenger\Middleware\IntegrationEventDispatcherMiddleware'
+                    - 'App\Common\Infrastructure\Messenger\Middleware\DomainEventDispatcherMiddleware'
