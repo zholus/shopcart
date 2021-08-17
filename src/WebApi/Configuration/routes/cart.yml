@@ -5,7 +5,7 @@ create_cart:
 
 show_cart_details:
   path: /carts/{cartId}
-  controller: App\WebApi\Action\Cart\ShowProductListAction
+  controller: App\WebApi\Action\Cart\ShowCartDetailsAction
   methods: [GET]
 
 add_product_to_cart:
