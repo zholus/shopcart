@@ -6,11 +6,9 @@ namespace App\WebApi\Action\Product;
 use App\Catalog\Application\ChangeProduct\ChangeProductCommand;
 use App\Catalog\Application\GetProductDetailsById\GetProductDetailsByIdQuery;
 use App\Common\Application\Command\CommandBus;
-use App\Common\Application\Command\CommandValidationException;
 use App\Common\Application\Query\QueryBus;
 use App\WebApi\Resources\Product\Product;
 use App\WebApi\Resources\Product\ProductPresenter;
-use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,17 +31,7 @@ final class UpdateProductAction extends AbstractController
             $price = (int)$price;
         }
 
-        try {
-            $this->commandBus->dispatch(new ChangeProductCommand($productId, $title, $price));
-        } catch (CommandValidationException $exception) {
-            return new JsonResponse([
-                'errors' => $exception->getMessages()
-            ], Response::HTTP_BAD_REQUEST);
-        } catch (DomainException $exception) {
-            return new JsonResponse([
-                'error' => $exception->getMessage()
-            ], Response::HTTP_CONFLICT);
-        }
+        $this->commandBus->dispatch(new ChangeProductCommand($productId, $title, $price));
 
         /** @var \App\Catalog\Application\ReadModel\Product $product */
         $product = $this->queryBus->handle(new GetProductDetailsByIdQuery($productId));

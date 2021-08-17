@@ -5,12 +5,10 @@ namespace App\WebApi\Action\Product;
 
 use App\Catalog\Application\GetProductsPaginated\GetProductsPaginatedQuery;
 use App\Catalog\Application\ReadModel\ProductPaginated;
-use App\Common\Application\Command\CommandValidationException;
 use App\Common\Application\Query\QueryBus;
 use App\WebApi\Resources\Product\Product;
 use App\WebApi\Resources\Product\ProductPresenter;
 use App\WebApi\Resources\Product\ProductsList;
-use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,18 +24,8 @@ final class ShowProductListAction extends AbstractController
     {
         $page = (int)$request->get('page', 1);
 
-        try {
-            /** @var ProductPaginated $productPaginated */
-            $productPaginated = $this->queryBus->handle(new GetProductsPaginatedQuery($page));
-        } catch (CommandValidationException $exception) {
-            return new JsonResponse([
-                'errors' => $exception->getMessages()
-            ], Response::HTTP_BAD_REQUEST);
-        } catch (DomainException $exception) {
-            return new JsonResponse([
-                'error' => $exception->getMessage()
-            ], Response::HTTP_CONFLICT);
-        }
+        /** @var ProductPaginated $productPaginated */
+        $productPaginated = $this->queryBus->handle(new GetProductsPaginatedQuery($page));
 
         $products = [];
 

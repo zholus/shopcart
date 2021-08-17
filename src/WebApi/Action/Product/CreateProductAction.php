@@ -6,11 +6,9 @@ namespace App\WebApi\Action\Product;
 use App\Catalog\Application\CreateProduct\CreateProductCommand;
 use App\Catalog\Application\GetProductDetailsByTitle\GetProductDetailsByTitleQuery;
 use App\Common\Application\Command\CommandBus;
-use App\Common\Application\Command\CommandValidationException;
 use App\Common\Application\Query\QueryBus;
 use App\WebApi\Resources\Product\Product;
 use App\WebApi\Resources\Product\ProductPresenter;
-use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,17 +27,7 @@ final class CreateProductAction extends AbstractController
         $title = $request->get('title', '');
         $price = (int)$request->get('price', 0);
 
-        try {
-            $this->commandBus->dispatch(new CreateProductCommand($title, $price));
-        } catch (CommandValidationException $exception) {
-            return new JsonResponse([
-                'errors' => $exception->getMessages()
-            ], Response::HTTP_BAD_REQUEST);
-        } catch (DomainException $exception) {
-            return new JsonResponse([
-                'error' => $exception->getMessage()
-            ], Response::HTTP_CONFLICT);
-        }
+        $this->commandBus->dispatch(new CreateProductCommand($title, $price));
 
         /** @var \App\Catalog\Application\ReadModel\Product $product */
         $product = $this->queryBus->handle(new GetProductDetailsByTitleQuery($title));

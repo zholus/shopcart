@@ -5,8 +5,6 @@ namespace App\WebApi\Action\Cart;
 
 use App\Cart\Application\RemoveItemFromCart\RemoveItemFromCartCommand;
 use App\Common\Application\Command\CommandBus;
-use App\Common\Application\Command\CommandValidationException;
-use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,17 +18,7 @@ final class RemoveProductAction extends AbstractController
 
     public function __invoke(string $cartId, int $productId, Request $request): JsonResponse
     {
-        try {
-            $this->commandBus->dispatch(new RemoveItemFromCartCommand($cartId, $productId));
-        } catch (CommandValidationException $exception) {
-            return new JsonResponse([
-                'errors' => $exception->getMessages()
-            ], Response::HTTP_BAD_REQUEST);
-        } catch (DomainException $exception) {
-            return new JsonResponse([
-                'error' => $exception->getMessage()
-            ], Response::HTTP_CONFLICT);
-        }
+        $this->commandBus->dispatch(new RemoveItemFromCartCommand($cartId, $productId));
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

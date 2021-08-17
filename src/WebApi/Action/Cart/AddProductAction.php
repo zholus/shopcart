@@ -9,13 +9,11 @@ use App\Cart\Application\ReadModel\Cart as CartReadModel;
 use App\Catalog\Application\GetProductDetailsById\GetProductDetailsByIdQuery;
 use App\Catalog\Application\ReadModel\Product as ProductReadModel;
 use App\Common\Application\Command\CommandBus;
-use App\Common\Application\Command\CommandValidationException;
 use App\Common\Application\Query\QueryBus;
 use App\WebApi\Resources\Cart\Cart;
 use App\WebApi\Resources\Cart\CartPresenter;
 use App\WebApi\Resources\Cart\Product;
 use App\WebApi\Resources\Cart\ProductsList;
-use DomainException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,23 +33,13 @@ final class AddProductAction extends AbstractController
         /** @var ProductReadModel $product */
         $product = $this->queryBus->handle(new GetProductDetailsByIdQuery($productId));
 
-        try {
-            $this->commandBus->dispatch(new AddItemToCartCommand(
-                $cartId,
-                $itemId,
-                $productId,
-                $product->getTitle(),
-                $product->getPrice()
-            ));
-        } catch (CommandValidationException $exception) {
-            return new JsonResponse([
-                'errors' => $exception->getMessages()
-            ], Response::HTTP_BAD_REQUEST);
-        } catch (DomainException $exception) {
-            return new JsonResponse([
-                'error' => $exception->getMessage()
-            ], Response::HTTP_CONFLICT);
-        }
+        $this->commandBus->dispatch(new AddItemToCartCommand(
+            $cartId,
+            $itemId,
+            $productId,
+            $product->getTitle(),
+            $product->getPrice()
+        ));
 
         /** @var CartReadModel $cartReadModel */
         $cartReadModel = $this->queryBus->handle(new GetCartDetailsByIdQuery($cartId));

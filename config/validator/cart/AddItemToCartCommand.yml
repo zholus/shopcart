@@ -1,0 +1,17 @@
+App\Cart\Application\AddItemToCart\AddItemToCartCommand:
+  properties:
+    cartId:
+      - Uuid: ~
+    itemId:
+      - Uuid: ~
+    externalId:
+      - Positive: ~
+    title:
+      - Length:
+          min: 2
+          max: 255
+          minMessage: 'Title must be at least {{ limit }} characters long'
+          maxMessage: 'Title cannot be longer than {{ limit }} characters'
+    price:
+      - Positive:
+          message: 'Price should be positive'
