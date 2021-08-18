@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\Catalog\Unit;
+namespace App\Tests;
 
 use App\Common\Domain\DomainEvents;
 
-abstract class TestCase extends \PHPUnit\Framework\TestCase
+abstract class UnitTestCase extends \PHPUnit\Framework\TestCase
 {
     public function setUp(): void
     {

@@ -11,11 +11,11 @@ use App\Catalog\Domain\ProductWithTitleExistsException;
 use App\Catalog\Domain\TitleChanged;
 use App\Common\Domain\DomainEvents;
 use App\Tests\Catalog\Unit\ProductBuilder;
-use App\Tests\Catalog\Unit\TestCase;
+use App\Tests\UnitTestCase;
 use Money\Money;
 use PHPUnit\Framework\MockObject\MockObject;
 
-final class ProductTest extends TestCase
+final class ProductTest extends UnitTestCase
 {
     private ProductTitleUniquenessChecker|MockObject $productTitleUniquenessChecker;
 
