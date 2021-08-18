@@ -48,7 +48,6 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
             );
         }
 
-        dd($exception);
         if ($response === null) {
             $response = new JsonResponse(
                 ['error' => 'Unexpected internal server error'],
