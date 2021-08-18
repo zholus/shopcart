@@ -56,6 +56,29 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "build:dev": [
+            "composer install",
+            "@db:setup",
+            "@tests:db:setup"
+        ],
+        "db:setup": [
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:migrations:migrate -n",
+            "php bin/console doctrine:fixtures:load -n"
+        ],
+        "tests:db:setup": [
+            "php bin/console --env=test doctrine:database:create",
+            "php bin/console --env=test doctrine:migrations:migrate -n"
+        ],
+        "tests": [
+            "php bin/phpunit"
+        ],
+        "tests:unit": [
+            "php bin/phpunit --testsuite=unit"
+        ],
+        "tests:integration": [
+            "php bin/phpunit --testsuite=integration"
         ]
     },
     "conflict": {
@@ -69,6 +92,7 @@
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^6.6",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "^5.3",
         "symfony/css-selector": "^5.3",
