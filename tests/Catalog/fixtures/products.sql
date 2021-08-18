@@ -1,0 +1,1 @@
+INSERT INTO products (id, title, price) VALUES (1, 'Witcher 1', 19900),(2, 'Witcher 2', 29999),(3, 'Witcher 3', 16901),(4, 'Witcher 4', 4505),(5, 'Witcher 5', 31111);
