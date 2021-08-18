@@ -69,4 +69,13 @@ class Product extends Aggregate
             $newPrice
         ));
     }
+
+    public function delete(): void
+    {
+        $this->publishDomainEvent(new ProductDeleted(
+            $this->id,
+            $this->title,
+            $this->price
+        ));
+    }
 }

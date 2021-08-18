@@ -17,6 +17,8 @@ final class DeleteProductHandler implements CommandHandler
     {
         $product = $this->productRepository->findById(ProductId::fromInt($command->getProductId()));
 
+        $product->delete();
+
         $this->productRepository->remove($product);
     }
 }

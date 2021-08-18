@@ -8,7 +8,7 @@ use App\Catalog\Application\IntegrationEvents\ProductPriceChangedIntegrationEven
 use App\Common\Application\Command\CommandBus;
 use App\Common\Application\Event\EventHandler;
 
-final class ProductPriceChangedHandler implements EventHandler
+final class ProductPriceChangedIntegrationEventHandler implements EventHandler
 {
     public function __construct(private CommandBus $commandBus)
     {

@@ -31,4 +31,12 @@ final class DbalItemRepository implements ItemRepository
             ['external_id' => $externalId]
         );
     }
+
+    public function removeItem(int $externalId): void
+    {
+        $this->connection->delete(
+            self::CARTS_ITEMS_TABLE,
+            ['external_id' => $externalId]
+        );
+    }
 }

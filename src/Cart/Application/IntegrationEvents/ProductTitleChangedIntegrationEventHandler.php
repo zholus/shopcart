@@ -8,7 +8,7 @@ use App\Catalog\Application\IntegrationEvents\ProductTitleChangedIntegrationEven
 use App\Common\Application\Command\CommandBus;
 use App\Common\Application\Event\EventHandler;
 
-final class ProductTitleChangedHandler implements EventHandler
+final class ProductTitleChangedIntegrationEventHandler implements EventHandler
 {
     public function __construct(private CommandBus $commandBus)
     {
