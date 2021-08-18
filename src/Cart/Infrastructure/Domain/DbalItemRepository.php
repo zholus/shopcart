@@ -22,4 +22,13 @@ final class DbalItemRepository implements ItemRepository
             ['external_id' => $externalId]
         );
     }
+
+    public function changeItemPrices(int $externalId, int $newPrices): void
+    {
+        $this->connection->update(
+            self::CARTS_ITEMS_TABLE,
+            ['price' => $newPrices],
+            ['external_id' => $externalId]
+        );
+    }
 }
